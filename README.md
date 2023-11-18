@@ -2,6 +2,16 @@
 
 This project aims to create a smart electric meter through IOT technology.The aim of IoT-based smart electricity meters is to revolutionize energy management, offering real-time consumption data, remote monitoring, and improved efficiency. By enabling informed decisions, optimizing grid operations, and supporting dynamic pricing, these meters enhance conservation efforts, reduce waste, and contribute to a more sustainable and responsive energy ecosystem.
   
+**Mind Mapping**
+
+![SMARTTTT (1)](https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/4a66ad12-6fc3-4fbe-84c6-8bc7e6e7a3df)
+
+systems.
+
+**Flow Chart**
+
+![WhatsApp Image 2023-11-17 at 1 35 08 PM](https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/c89ef95a-608f-4299-a9d9-08cc7ef91a5b)
+
 **Objectives:**
 
 •	Real-Time Monitoring: Provide users with instantaneous visibility into their electricity consumption.
@@ -22,38 +32,9 @@ This project aims to create a smart electric meter through IOT technology.The ai
 
 •	Sustainability: Contribute to a more sustainable energy ecosystem by promoting responsible consumption and reducing environmental impact.
 
-•	Technological Innovation: Foster ongoing technological advancements, ensuring adaptability, and promoting the continuous improvement of smart metering systems.
+•	Technological Innovation: Foster ongoing technological advancements, ensuring adaptability, and promoting the continuous improvement of smart metering 
 
 **Features**
 
-SCT-013 Current Sensor:
-
-The SCT-013 is a non-invasive split-core type clamp meter sensor designed to measure AC current up to 100 amperes. This type of current sensor is commonly known as a current transformer (CT) and is used for measuring alternating current in a building. The SCT-013 is convenient to use, as it can be easily attached to either the live or neutral wire without any electrical work involving high voltage.
-![SCT-013-Current-Sensor](https://github.com/SuhanRai/IOT-Enabled-Smart-Electric-Meter-/assets/149513511/71d74771-7081-459d-83cb-edd8b2d86fb9)
-
-ZMPT101B AC Single Phase Voltage Sensor:
-
-The ZMPT101B AC Single Phase Voltage Sensor Module is a high-precision device built on the ZMPT101B voltage transformer. This makes it an ideal choice for measuring accurate AC voltage with an Arduino or ESP32. The module is capable of measuring AC voltage within a range of 250V and offers adjustable analog output. It is easy to use, featuring a multi-turn trim potentiometer for adjusting and calibrating the ADC output.
-
-![ZMPT101B](https://github.com/SuhanRai/IOT-Enabled-Smart-Electric-Meter-/assets/149513511/2c092b68-c3a2-4541-ade8-4e61cd415843)
-
-**Flow Chart**
-
-![flowchart energymeter](https://github.com/SuhanRai/IOT-Enabled-Smart-Electric-Meter-/assets/149513511/e9f74486-0f28-40ae-8b88-2aaecae43dd0)
-
-**Mind Mapping**
-
-![smartenergy](https://github.com/SuhanRai/IOT-Enabled-Smart-Electric-Meter-/assets/149513511/ca05ba84-e412-4cd6-a915-d3f0805f16b8)
-
-
-
-
-
-
-
-
-
-
-
-
+Electronic energy meters, also known as smart meters, incorporate a range of features that enhance their functionality and utility in measuring electrical energy consumption. These meters typically boast a digital display for clear and precise readings, offering high accuracy in measuring energy usage with class ratings indicating their level of precision. Equipped with communication interfaces like RS-485 or Modbus, these meters enable remote reading and monitoring, reducing the need for physical inspections and facilitating efficient data collection. Advanced meters may support bi-directional measurement, accommodating scenarios where energy generation, such as from solar panels, needs to be tracked. Data logging capabilities, including load profile recording, allow for the analysis of consumption patterns over time, aiding in optimization. Tamper detection features are often included to ensure the integrity of measurements and alert authorities to any attempts at manipulation. Smart meters can also measure power factor, demand, and peak usage, providing valuable insights for both consumers and utilities. With compatibility for renewable energy sources and modular designs for easy upgrades, electronic energy meters play a crucial role in modern energy management systems, offering accurate and actionable data to promote efficient and sustainable energy usage.
 
