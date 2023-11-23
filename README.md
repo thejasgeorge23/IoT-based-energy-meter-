@@ -4,6 +4,10 @@
 
 This project aims to create a smart electric meter through IOT technology.The aim of IoT-based smart electricity meters is to revolutionize energy management, offering real-time consumption data, remote monitoring, and improved efficiency. By enabling informed decisions, optimizing grid operations, and supporting dynamic pricing, these meters enhance conservation efforts, reduce waste, and contribute to a more sustainable and responsive energy ecosystem.
 
+**Technical blogger**
+
+https://iotsmartmeter.blogspot.com/2023/11/title-iot-energy-meter-real-time.html
+
 **Objectives:**
 
 •	Real-Time Monitoring: Provide users with instantaneous visibility into their electricity consumption.
@@ -116,152 +120,173 @@ Step 17: Stop
 
 ![123](https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/83c25b85-36dd-47de-a705-2fce1a7859a7)
 
-**Circuit code**
+**Circuit Diagram Hardware Setup**
 
-#define BLYNK_TEMPLATE_ID "TMPL3BfWKkOKT"
+![Capture9999](https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/7011b453-8441-4df0-bb95-0fa549930f18)
+
+**Circuit**
+
+![Capture000](https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/db9b5448-d41b-428f-866b-f463f2ffd2c0)
+
+
+**Circuit Code**
+
+#define BLYNK_TEMPLATE_ID "TMPL3Xkno1f7f"
 #define BLYNK_TEMPLATE_NAME "IOT ENERGY METER"
-#define BLYNK_PRINT Serial
+#define BLYNK_AUTH_TOKEN "nyuN_wjzzpkjhT8f5Q4dOiGnOCe3BAkx"
 
+#define BLYNK_PRINT Serial
+ 
 #include "EmonLib.h"
 #include <EEPROM.h>
 #include <WiFi.h>
 #include <WiFiClient.h>
 #include <BlynkSimpleEsp32.h>
 #include <Wire.h>
-#include <Adafruit_SSD1306.h>
-
-// Adafruit_SSD1306 setup
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 32
-#define OLED_RESET    -1
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
-
+#include <LiquidCrystal_I2C.h>
+LiquidCrystal_I2C lcd(0x27, 20, 4);
+ 
 // Constants for calibration
 const float vCalibration = 41.5;
 const float currCalibration = 0.15;
-
+ 
 // Blynk and WiFi credentials
+const char auth[] = "nyuN_wjzzpkjhT8f5Q4dOiGnOCe3BAkx";
 const char ssid[] = "Suhan276";
 const char pass[] = "qwertyuiop";
-
+ 
 // EnergyMonitor instance
 EnergyMonitor emon;
-
+ 
 // Timer for regular updates
 BlynkTimer timer;
-
+ 
 // Variables for energy calculation
 float kWh = 0.0;
 unsigned long lastMillis = millis();
-
+ 
 // EEPROM addresses for each variable
 const int addrVrms = 0;
 const int addrIrms = 4;
 const int addrPower = 8;
 const int addrKWh = 12;
-
+ 
 // Function prototypes
 void sendEnergyDataToBlynk();
 void readEnergyDataFromEEPROM();
 void saveEnergyDataToEEPROM();
-
-void setup() {
+ 
+ 
+void setup()
+{
   Serial.begin(115200);
   Blynk.begin(auth, ssid, pass);
-
-  // Initialize the OLED display
-  if(!display.begin(SSD1306_I2C_ADDRESS, OLED_RESET)) {
-    Serial.println(F("SSD1306 allocation failed"));
-    for(;;);
-  }
-  display.display();
-  delay(2000);
-
+ 
+  // Initialize the LCD
+  lcd.init();
+  lcd.backlight();
+ 
   // Initialize EEPROM with the size of the data to be stored
   EEPROM.begin(32); // Allocate 32 bytes for float values (4 bytes each) and some extra space
-
+ 
   // Read the stored energy data from EEPROM
   readEnergyDataFromEEPROM();
-
+ 
   // Setup voltage and current inputs
-  emon.voltage(35, vCalibration, 1.7); // Voltage: input pin, calibration, phase_shift
-  emon.current(34, currCalibration);    // Current: input pin, calibration
-
+  emon.voltage(A0, vCalibration, 1.7); // Voltage: input pin, calibration, phase_shift
+  emon.current(15, currCalibration);    // Current: input pin, calibration
+ 
   // Setup a timer for sending data every 5 seconds
   timer.setInterval(5000L, sendEnergyDataToBlynk);
-
+ 
   // A small delay for system to stabilize
   delay(1000);
 }
-
-void loop() {
+ 
+ 
+void loop()
+{
   Blynk.run();
   timer.run();
 }
-
-void sendEnergyDataToBlynk() {
+ 
+ 
+void sendEnergyDataToBlynk()
+{
   emon.calcVI(20, 2000); // Calculate all. No.of half wavelengths (crossings), time-out
-
+ 
   // Calculate energy consumed in kWh
   unsigned long currentMillis = millis();
   kWh += emon.apparentPower * (currentMillis - lastMillis) / 3600000000.0;
   lastMillis = currentMillis;
-
+ 
   // Print data to Serial for debugging
   Serial.printf("Vrms: %.2fV\tIrms: %.4fA\tPower: %.4fW\tkWh: %.5fkWh\n",
                 emon.Vrms, emon.Irms, emon.apparentPower, kWh);
-
+ 
   // Save the latest values to EEPROM
   saveEnergyDataToEEPROM();
-
+ 
   // Send data to Blynk
   Blynk.virtualWrite(V0, emon.Vrms);
   Blynk.virtualWrite(V1, emon.Irms);
   Blynk.virtualWrite(V2, emon.apparentPower);
   Blynk.virtualWrite(V3, kWh);
-
-  // Update the OLED display with the new values
-  display.clearDisplay();
-  display.setTextSize(1);
-  display.setTextColor(SSD1306_WHITE);
-  display.setCursor(0,0);
-  display.print("Vrms: ");
-  display.print(emon.Vrms, 2);
-  display.print(" V");
-
-  display.setCursor(0, 10);
-  display.print("Irms: ");
-  display.print(emon.Irms, 4);
-  display.print(" A");
-
-  display.setCursor(0, 20);
-  display.print("Power: ");
-  display.print(emon.apparentPower, 4);
-  display.print(" W");
-
-  display.setCursor(0, 30);
-  display.print("kWh: ");
-  display.print(kWh, 5);
-  display.print(" kWh");
-
-  display.display();
+ 
+  // Update the LCD with the new values
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Vrms: ");
+  lcd.print(emon.Vrms, 2);
+  lcd.print(" V");
+ 
+  lcd.setCursor(0, 1);
+  lcd.print("Irms: ");
+  lcd.print(emon.Irms, 4);
+  lcd.print(" A");
+ 
+  lcd.setCursor(0, 2);
+  lcd.print("Power: ");
+  lcd.print(emon.apparentPower, 4);
+  lcd.print(" W");
+ 
+  lcd.setCursor(0, 3);
+  lcd.print("kWh: ");
+  lcd.print(kWh, 5);
+  lcd.print(" kWh");
 }
-
-void readEnergyDataFromEEPROM() {
+ 
+ 
+void readEnergyDataFromEEPROM()
+{
   // Read the stored kWh value from EEPROM
   EEPROM.get(addrKWh, kWh);
-
+ 
   // Check if the read value is a valid float. If not, initialize it to zero
-  if (isnan(kWh)) {
+  if (isnan(kWh))
+  {
     kWh = 0.0;
     saveEnergyDataToEEPROM(); // Save initialized value to EEPROM
   }
 }
-
-void saveEnergyDataToEEPROM() {
+ 
+ 
+void saveEnergyDataToEEPROM()
+{
   // Write the current kWh value to EEPROM
   EEPROM.put(addrKWh, kWh);
-
+ 
   // Commit changes to EEPROM
   EEPROM.commit();
 }
+
+**Demo Video**
+
+https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/9c23fcd9-5fbc-4cc6-ac19-285f6f3d8486
+
+https://github.com/SachithaCD2003/IoT-based-energy-meter/assets/149662267/e776b058-1967-4421-8da3-0733d3807737
+
+
+
+
+
